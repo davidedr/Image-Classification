@@ -119,5 +119,35 @@ plt.figure()
 plt.imshow(img_mean_tf)
 plt.show()
 
+#
+# Compute std dev image via Tensor Flow
+#
+
+# Create a tensorflow operation to give you the standard deviation
+
+# First compute the difference of every image with a
+# 4 dimensional mean image shaped 1 x H x W x C
+mean_img_4d = tf.reduce_mean(imgs, axis=0, keep_dims = True)
+
+subtraction = imgs - mean_img_4d
+
+# Now compute the standard deviation by calculating the
+# square root of the expected squared differences
+std_img_op = tf.sqrt(tf.reduce_mean(subtraction * subtraction, axis=0))
+
+# Now calculate the standard deviation using your session
+s = tf.Session()
+std_img = std_img_op.eval(session = s)
+s.close()
+
+# Then plot the resulting standard deviation image:
+# Make sure the std image is the right size!
+assert(std_img.shape == (100, 100) or std_img.shape == (100, 100, 3))
+plt.figure(figsize=(10, 10))
+std_img_show = std_img / np.max(std_img)
+plt.imshow(std_img_show)
+plt.show()
+plt.imsave(arr=std_img_show, fname='std.png')
+
 print('Done.')
     
