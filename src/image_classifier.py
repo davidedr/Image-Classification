@@ -4,6 +4,12 @@ Created on 04 set 2017
 @author: davide
 '''
 
+'''
+    Perform several operations on a set of images (downloading from url, reading, cropping
+    rescaling, compute mean std dev, normalize, ...
+    This work is done on behalf and loosely based on:
+    Parag K. Mital's "Creative Applications of Deep Learning w/ Tensorflow" Kadenze Academy course  
+'''
 import os
 
 # Read image links from file
@@ -38,7 +44,7 @@ while not done:
         else:
             img_index += 1
             img_count += 1
-            print(str(img_index) + ', ' + image_filename + ', ' +  url + " don't ovewrite!")
+            print(str(img_index) + ', ' + image_filename + ', ' +  url + " don't overwrite!")
     else:
         print(str(img_index) + ', ' + image_filename + ', ' +  url)
         try: 
@@ -102,7 +108,8 @@ plt.figure()
 plt.imshow(img_stddev)
 plt.title('Standard dev image')
 plt.show()
-    
+
+'''    
 #
 # Use Tensor flow to compute mean image
 #
@@ -148,6 +155,53 @@ std_img_show = std_img / np.max(std_img)
 plt.imshow(std_img_show)
 plt.show()
 plt.imsave(arr=std_img_show, fname='std.png')
+'''
+
+# Normalize the dataset images
+imgs_normalized = (imgs - img_mean)/img_stddev
+plt.figure(figsize=(10, 10))
+plt.imshow(utils.montage(imgs_normalized, 'normalized.png'))
+plt.show()
+
+'''
+Apply another type of normalization to 0-1 just for the purposes of plotting the image.
+If we didn't do this, the range of our values would be somewhere between -1 and 1,
+and matplotlib would not be able to interpret the entire range of values. By rescaling our -1 to 1 valued images to 0-1,
+we can visualize it better.
+'''
+norm_imgs_rescaled = (imgs_normalized - np.min(imgs_normalized)) / (np.max(imgs_normalized) - np.min(imgs_normalized))
+plt.figure(figsize = (10, 10))
+plt.imshow(utils.montage(norm_imgs_rescaled, 'normalized.png'))
+plt.show()
+
+#
+# Compute the convolution kernel
+#
+ksize = imgs[0].shape[0]
+print('ksize: ' + str(ksize))
+
+kernel = np.concatenate([utils.gabor(ksize)[:, :, np.newaxis] for i in range(3)], axis = 2)
+
+# Now make the kernels into the shape: [ksize, ksize, 3, 1]:
+kernel_4d = np.reshape(kernel, [ksize, ksize, 3, 1])
+
+'''
+    If yu want to do the reshape operation in Tensor flow land instead of Numpy's,
+    keep in mind that in the first case kernel_4d in not actually computed until
+    you request it. 
+'''
+'''
+kernel_4d = tf.reshape(kernel, [ksize, ksize, 3, 1])
+with tf.Session():
+    kernel_4d = kernel_4d.eval()
+'''
+
+assert(kernel_4d.shape == (ksize, ksize, 3, 1))
+
+# Display and save the kernel
+plt.figure(figsize = (5, 5))
+plt.imshow(kernel_4d[:, :, 0, 0], cmap='gray')
+plt.show()
+plt.imsave(arr=kernel_4d[:, :, 0, 0], fname='kernel.png', cmap='gray')
 
 print('Done.')
-    
