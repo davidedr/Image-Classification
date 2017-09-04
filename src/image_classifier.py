@@ -20,34 +20,76 @@ content = [x.strip() for x in content]
 print('Downloading images...')
 import urllib.request
 
+OVERWRITE = False
+
 landing_foldername = foldername
 N = 100
 done = False
 img_count = 0
 img_index = 0
+image_filenames = []
 while not done:
     url = content[img_index]
     image_filename = 'train_000%03d.jpg' % img_count
     image_filename_pathcomplete = os.path.join(foldername, image_filename)
     if os.path.exists(image_filename_pathcomplete):
-        os.remove(image_filename_pathcomplete)
-    print(str(img_index) + ', ' + image_filename + ', ' +  url)
-    try: 
-        urllib.request.urlretrieve(url, image_filename_pathcomplete)
-    except:
-        None
-    else:
-        if 'flick' in url and os.path.getsize(image_filename_pathcomplete) == 2051:
+        if OVERWRITE:
             os.remove(image_filename_pathcomplete)
-            print('flicr empty image.')
         else:
+            img_index += 1
             img_count += 1
-        
-    img_index += 1
+            print(str(img_index) + ', ' + image_filename + ', ' +  url + " don't ovewrite!")
+    else:
+        print(str(img_index) + ', ' + image_filename + ', ' +  url)
+        try: 
+            urllib.request.urlretrieve(url, image_filename_pathcomplete)
+        except:
+            None
+        else:
+            if 'flick' in url and os.path.getsize(image_filename_pathcomplete) == 2051:
+                os.remove(image_filename_pathcomplete)
+                print('flicr empty image.')
+            else:
+                img_count += 1
+                image_filenames.append(image_filename_pathcomplete)
+            
+        img_index += 1
     if img_count == N:
         done = True
     if img_index >= len(content):
         done = True
-        
+    
+import matplotlib.pyplot as plt
+
+filenames = image_filenames   
+# Read every filename as an RGB image
+filenames = [os.path.join(foldername, fname)
+             for fname in os.listdir(foldername) if not os.path.isdir(fname) and 'train' in fname]
+imgs = [plt.imread(fname)[..., :3] for fname in filenames]
+
+# Check images: need to have all the same number of channels
+# in shape (W, H, C) C must be the same for all images 
+[print(img_index, ', ', img.shape) for img_index, img in enumerate(imgs)]
+
+from libs import utils
+# Crop every image to a square
+imgs = [utils.imcrop_tosquare(img_i) for img_i in imgs]
+
+# Then resize the square image to 100 x 100 pixels
+from skimage.transform import resize
+imgs = [resize(img_i, (100, 100)) for img_i in imgs]
+
+# Finally make our list of 3-D images a 4-D array with the first dimension the number of images:
+import numpy as np
+imgs = np.array(imgs).astype(np.float32)
+
+# Plot the resulting dataset:
+# Make sure you "run" this cell after you create your `imgs` variable as a 4-D array!
+# Make sure we have a 100 x 100 x 100 x 3 dimension array
+assert(imgs.shape == (100, 100, 100, 3))
+plt.figure(figsize=(10, 10))
+plt.imshow(utils.montage(imgs, saveto='dataset.png'))
+plt.show()
+                            
 print('Done.')
     
