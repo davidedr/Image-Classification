@@ -90,6 +90,34 @@ assert(imgs.shape == (100, 100, 100, 3))
 plt.figure(figsize=(10, 10))
 plt.imshow(utils.montage(imgs, saveto='dataset.png'))
 plt.show()
-                            
+    
+img_mean = np.mean(imgs, axis = 0)
+plt.figure()
+plt.imshow(img_mean)
+plt.title('Mean image')
+plt.show()
+
+img_stddev = np.std(imgs, axis = 0)
+plt.figure()
+plt.imshow(img_stddev)
+plt.title('Standard dev image')
+plt.show()
+    
+#
+# Use Tensor flow to compute mean image
+#
+import tensorflow as tf
+img_mean_tf = tf.reduce_mean(imgs, axis=0, keep_dims = True)
+print('img_mean_tf.shape: ' + str(img_mean_tf.shape))
+
+s = tf.Session()
+img_mean_tf = img_mean_tf.eval(session = s)
+s.close()
+
+img_mean_tf = img_mean_tf[0, :, :, :]
+plt.figure()
+plt.imshow(img_mean_tf)
+plt.show()
+
 print('Done.')
     
