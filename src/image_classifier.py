@@ -204,4 +204,16 @@ plt.imshow(kernel_4d[:, :, 0, 0], cmap='gray')
 plt.show()
 plt.imsave(arr=kernel_4d[:, :, 0, 0], fname='kernel.png', cmap='gray')
 
+#
+# Perform the convolution
+#
+convolved = utils.convolve(imgs, kernel_4d)
+
+convolved_show = (convolved - np.min(convolved)) / (np.max(convolved) - np.min(convolved))
+
+print(convolved_show.shape)
+plt.figure(figsize=(10, 10))
+plt.imshow(utils.montage(convolved_show[..., 0], 'convolved.png'), cmap='gray')
+plt.show()
+
 print('Done.')
