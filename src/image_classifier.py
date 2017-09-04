@@ -21,21 +21,28 @@ print('Downloading images...')
 import urllib.request
 
 landing_foldername = foldername
-N = 5
+N = 100
 done = False
 img_count = 0
 img_index = 0
 while not done:
     url = content[img_index]
-    image_filename = 'train_000%03d.jpg' % img_index
+    image_filename = 'train_000%03d.jpg' % img_count
     image_filename_pathcomplete = os.path.join(foldername, image_filename)
+    if os.path.exists(image_filename_pathcomplete):
+        os.remove(image_filename_pathcomplete)
     print(str(img_index) + ', ' + image_filename + ', ' +  url)
     try: 
         urllib.request.urlretrieve(url, image_filename_pathcomplete)
     except:
         None
     else:
-        img_count += 1
+        if 'flick' in url and os.path.getsize(image_filename_pathcomplete) == 2051:
+            os.remove(image_filename_pathcomplete)
+            print('flicr empty image.')
+        else:
+            img_count += 1
+        
     img_index += 1
     if img_count == N:
         done = True
