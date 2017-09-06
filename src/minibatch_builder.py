@@ -4,6 +4,10 @@ Created on 05 set 2017
 @author: davide
 '''
 
+'''
+    Demonstrate how to divide a dataset into batches to be then fed to some learning algorithm
+    and how to get the single batches chosen randomly 
+'''
 import numpy as np
 
 # Dataset (or indexes into dataset array)
