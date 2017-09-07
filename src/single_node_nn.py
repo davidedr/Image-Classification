@@ -17,9 +17,8 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-n_observations = 1000
-
 # The data to learn from
+n_observations = 1000
 xs = np.linspace(-3, 3, n_observations)
 ys = np.sin(xs) + np.random.uniform(-0.5, 0.5, n_observations)
 
@@ -85,7 +84,7 @@ with tf.Session() as session:
         # Let's show something
         if it_i % 10 == 0:
             ys_pred = Y_pred.eval(feed_dict = { X: xs }, session = session)
-            ax.plot(xs, ys_pred, 'k', alpha = it_i/n_iterations)
+            ax.plot(xs, ys_pred, 'k', alpha = it_i/n_iterations, color = 'red')
             fig.show()
             plt.draw()
 
