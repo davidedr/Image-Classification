@@ -34,10 +34,6 @@ plt.show()
 n_iterations = 500
 precision = 1E-6
 
-# Input data to learn from
-xs = np.linspace(-3, 3, n_observations)
-ys = np.sin(xs) + np.random.uniform(-0.5, 0.5, n_observations)
-
 # Initial values for parameters
 W = tf.Variable(tf.random_normal([1], dtype=tf.float32, stddev=0.1), name='weight')
 B = tf.Variable(tf.constant([0], dtype=tf.float32), name='bias')
