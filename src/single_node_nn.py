@@ -13,9 +13,15 @@ Created on 07 set 2017
 # 2.2 Training the NN using the whole input dataset
 #
 
+#
+# 2.2 Training the NN using the whole input dataset
+#
+
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
+
+plt.style.use('ggplot')
 
 # The data to learn from
 n_observations = 1000
@@ -91,6 +97,12 @@ with tf.Session() as session:
 plt.show()
 
 print('Learnt values W: ' + str(w) + ', B: ' + str(b))
+
+# Measure variance of paramters during learning
+# These values are to be compared w/ the ones coming from
+# the following Mini-batc Gradient descent.
+# As a matter of fact mini batch  is meant to get more stable updates of parameters 
+print('Parameters std dev. Stdandard deviation of (W): ' + str(np.std(Ws)) + ', stdandard deviation of B: ' + str(np.std(Bs)))
 
 plt.figure()
 plt.plot(Ws)

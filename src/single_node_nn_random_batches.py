@@ -19,7 +19,6 @@ import matplotlib.pyplot as plt
 
 # Metaparameters
 n_iterations = 500
-precision = 1E-6
 
 # Input data to learn from
 n_observations = 1000
@@ -89,6 +88,8 @@ with tf.Session() as session:
 plt.show()
 
 print('Learnt values W: ' + str(w) + ', B: ' + str(b))
+# Measure variance of paramters during learning
+print('Parameters std dev. Stdandard deviation of (W): ' + str(np.std(Ws)) + ', stdandard deviation of B: ' + str(np.std(Bs)))
 
 plt.figure()
 plt.plot(Ws)
