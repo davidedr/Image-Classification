@@ -100,7 +100,7 @@ print('Learnt values W: ' + str(w) + ', B: ' + str(b))
 
 # Measure variance of paramters during learning
 # These values are to be compared w/ the ones coming from
-# the following Mini-batc Gradient descent.
+# the following Mini-batch Gradient descent.
 # As a matter of fact mini batch  is meant to get more stable updates of parameters 
 print('Parameters std dev. Stdandard deviation of (W): ' + str(np.std(Ws)) + ', stdandard deviation of B: ' + str(np.std(Bs)))
 

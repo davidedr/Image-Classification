@@ -55,7 +55,7 @@ ax.scatter(xs, ys, alpha = 0.5, marker = '+')
 
 Ws = []
 Bs = []
-overall_training_cost = []
+training_costs = []
 batch_size = 1000
 with tf.Session() as session:
     
@@ -77,7 +77,7 @@ with tf.Session() as session:
             Bs.append(b)
 
         training_cost = session.run(cost, feed_dict = { X: xs, Y: ys })
-        overall_training_cost.append(training_cost)
+        training_costs.append(training_cost)
         
         if it_i % 10 == 0:
             ys_pred = Y_pred.eval(feed_dict = { X: xs }, session = session)
@@ -89,10 +89,10 @@ plt.show()
 
 print('Learnt values W: ' + str(w) + ', B: ' + str(b))
 # Measure variance of paramters during learning
-print('Parameters std dev. Stdandard deviation of (W): ' + str(np.std(Ws)) + ', stdandard deviation of B: ' + str(np.std(Bs)))
+print('Parameters std dev. tdandard deviation of (W): ' + str(np.std(Ws)) + ', stdandard deviation of B: ' + str(np.std(Bs)))
 
 plt.figure()
-plt.plot(Ws)
+plt.plot(Ws)    
 plt.title('W (slope)')
 plt.xlabel('Iteration no.')
 plt.show()
@@ -104,6 +104,6 @@ plt.xlabel('Iteration no.')
 plt.show()
 
 plt.figure()
-plt.plot(range(len(overall_training_cost)), overall_training_cost)
+plt.plot(range(len(training_costs)), training_costs)
 plt.title('Training cost')
 plt.show()
